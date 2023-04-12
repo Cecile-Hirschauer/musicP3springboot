@@ -13,6 +13,7 @@
         <div class="mb-3">
             <label for="exampleInputTitle" class="form-label">Titre de musique</label>
             <input type="text" th:field="*{title}" class="form-control" id="exampleInputTitle">
+            <p class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
         </div>
         <div class="mb-3">
             <label for="exampleInputDescription" class="form-label">Description</label>

@@ -6,16 +6,21 @@ import com.example.musicp3.repository.MusicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
 
 @Controller
-public class MusicController {
+public class MusicController implements WebMvcConfigurer {
     @Autowired
     private MusicRepository musicRepository;
+
+
     @RequestMapping("/")
     public String displayHome(){
         return "index";
@@ -35,17 +40,21 @@ public class MusicController {
     }
 
     @GetMapping("/create-music")
-    public String displayAdd(@ModelAttribute CreateMusicForm createMusicForm) {
+    public String displayAdd(@ModelAttribute    CreateMusicForm createMusicForm) {
         return "create-music";
     }
 
     @PostMapping("/createMusic")
-    public String createMusic(@ModelAttribute CreateMusicForm createMusicForm) {
+    public String createMusic(@Valid CreateMusicForm createMusicForm, BindingResult bidingResult) {
+        if (bidingResult.hasErrors()) {
+            return "create-music";
+        }
         System.out.println("je suis dans le postMapping");
         Music music = new Music();
         music.setTitle(createMusicForm.getTitle());
         music.setDescription(createMusicForm.getDescription());
         musicRepository.add(music);
+
         return "successForm";
 
     }
